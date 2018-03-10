@@ -1473,7 +1473,12 @@ class MainWindow(QWidget):
         QDesktopServices.openUrl(url)
 
     def slotShowInfo(self):
-        sInfo = 'Version: 15.0.0\nDelevoper: EzR1d3r\ne-mail: brd1080@yandex.ru\nSuppot the project: https://money.yandex.ru/to/410011144650865'
+        sVersion = 'Version: 15.0.0\n'
+        sDeveloper = 'Delevoper: EzR1d3r\n'
+        sEmail = 'e-mail: brd1080@yandex.ru\n'
+        sGitHub = 'https://github.com/EzR1d3r/WorkoutsDiary\n'
+        sSupport = 'Suppot the project: https://money.yandex.ru/to/410011144650865\n'
+        sInfo = sVersion + sDeveloper + sEmail + sGitHub + sSupport
         mb = QMessageBox(0,'Info',sInfo, QMessageBox.Ok )
         mb.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
         return mb.exec_()
