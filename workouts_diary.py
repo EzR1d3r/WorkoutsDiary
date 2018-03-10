@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (QAction, QWidget, QFileDialog, QLineEdit,
                              QHBoxLayout, QToolBar,QMessageBox, QComboBox,
                              QColorDialog,  QDialogButtonBox, QMenu, QSplitter,
                              QCalendarWidget, QFrame)
-from PyQt5.QtGui import (QIcon, QFont, QBrush, QColor, QCursor, QTextCharFormat)
+from PyQt5.QtGui import (QIcon, QFont, QBrush, QColor, QCursor, QTextCharFormat, QDesktopServices)
 from PyQt5 import QtCore
 import os
 import track_parser
@@ -1412,7 +1412,7 @@ class MainWindow(QWidget):
     def slotDelSelectedSet(self):
         row_index = self.tWidget.currentRow()
         row_index = self.tWidget.currentRow()
-        set_exc = self.tWidget.item(row_index,1).text()
+        set_exc = self.tWidget.item(row_index, 1).text()
         strQuestion = ('Are you want to delete this set: '
                         +  set_exc
                         + '?')
@@ -1433,7 +1433,7 @@ class MainWindow(QWidget):
             OldListSum = (self.fnLoadFile('data/sum.txt'))[0]
             NewListSum = self.fnDelDataItemByID(set_id, 2, OldListSum, 1)
             work_id = NewListSum[1][0]
-            print('work_id :' + str(work_id))
+            print(('work_id :' + str(work_id)))
             NewListSum = NewListSum[0]
             strNewListSum = self.fnDataListToString(NewListSum)
             self.fnSaveDataListToFile(strNewListSum, 'data/sum.txt')
@@ -1454,7 +1454,7 @@ class MainWindow(QWidget):
         set_id = (self.fnLoadFile('data/temp.txt'))[0][row_index + 1][0]
         DataList = (self.fnLoadFile('data/sum.txt'))[0]
         work_id = self.find_DataItem(DataList, set_id, 2)[1]
-        print(self.fnCreateWorkoutColor(work_id))
+        print((self.fnCreateWorkoutColor(work_id)))
 
         AddWorkoutWindow.OpenDialog(self, work_id)
 
@@ -1467,6 +1467,16 @@ class MainWindow(QWidget):
             print("Workout hasn't been changed")
 
         self.slotReloadLast()
+
+    def OpenUrl(self, sUrl):
+        url = QtCore.QUrl(sUrl)
+        QDesktopServices.openUrl(url)
+
+    def slotShowInfo(self):
+        sInfo = 'Version: 15.0.0\nDelevoper: EzR1d3r\ne-mail: brd1080@yandex.ru\nSuppot the project: https://money.yandex.ru/to/410011144650865'
+        mb = QMessageBox(0,'Info',sInfo, QMessageBox.Ok )
+        mb.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+        return mb.exec_()
 
     def contextMenuEvent1(self, event):
         rc_menu = QMenu(self)
@@ -1538,6 +1548,11 @@ class MainWindow(QWidget):
         self.setDelAction.triggered.connect(self.slotDelSelectedSet)
         self.setDelAction.setEnabled(0)
 
+        self.showInfo = QAction (QIcon('icons/info.png'),'Info', self)
+        self.showInfo.setStatusTip('Info')
+        self.showInfo.triggered.connect(self.slotShowInfo)
+        self.showInfo.setEnabled(1)
+
         exercisesAction = QAction(QIcon('icons/exercises.png'), 'Exercises list', self)
         exercisesAction.setShortcut('Ctrl+E')
         exercisesAction.setStatusTip('Open exercises list')
@@ -1606,7 +1621,8 @@ class MainWindow(QWidget):
         self.toolbar2.addAction(self.userDelAction)
         self.toolbar2.addAction(self.workDelAction)
         self.toolbar2.addAction(self.setDelAction)
-
+        self.toolbar2.addSeparator()
+        self.toolbar2.addAction(self.showInfo)
 
         self.toolbar4 = QToolBar('Tool bar',self)
         self.toolbar4.addSeparator()
